@@ -80,7 +80,7 @@ var canvas, camera, scene, renderer;
 var BOX_DISTANCE = 1.5;
 var BOX_SIZE = 0.25;
 var BOX_QUANTITY = 6;
-var boxesAdded = false;
+var carAdded = false;
 
 /**
  * Use the `getARDisplay()` utility to leverage the WebVR API
@@ -156,8 +156,8 @@ function update() {
   // If we have not added boxes yet, and we have positional
   // information applied to our camera (it can take a few seconds),
   // and the camera's Y position is not undefined or 0, create boxes
-  if (!boxesAdded && !camera.position.y) {
-    addBoxes();
+  if (!carAdded && !camera.position.y) {
+    addCar();
   }
 
   // Render our three.js virtual scene
@@ -184,19 +184,15 @@ function onWindowResize () {
  * Once we have position information applied to our camera,
  * create some boxes at the same height as the camera
  */
-function addBoxes () {
+function addCar () {
   // Create some cubes around the origin point
-  for (var i = 0; i < BOX_QUANTITY; i++) {
-    var angle = Math.PI * 2 * (i / BOX_QUANTITY);
-    var geometry = new THREE.BoxGeometry(BOX_SIZE, BOX_SIZE, BOX_SIZE);
-    var material = new THREE.MeshNormalMaterial();
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.set(Math.cos(angle) * BOX_DISTANCE, camera.position.y - 0.25, Math.sin(angle) * BOX_DISTANCE);
-    scene.add(cube);
-  }
+  var loader = new THREE.OBJLoader();
+  loader.load('models/compact.obj', function(o) {
+    scene.add(o);
+  });
 
   // Flip this switch so that we only perform this once
-  boxesAdded = true;
+  carAdded = true;
 }
 </script>
 </body>
