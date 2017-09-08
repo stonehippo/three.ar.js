@@ -189,6 +189,7 @@ function addCar () {
   // Create some cubes around the origin point
   var loader = new THREE.OBJLoader();
   loader.load('models/compact.obj', function(o) {
+      o.position.y = - 95;
     scene.add(o);
   });
 
