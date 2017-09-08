@@ -80,7 +80,7 @@ var vrDisplay, vrControls, arView;
 var canvas, camera, scene, renderer;
 var BOX_DISTANCE = 1.5;
 var BOX_SIZE = 0.25;
-var BOX_QUANTITY = 6;
+var BOX_QUANTITY = 1;
 var carAdded = false;
 
 /**
@@ -187,11 +187,28 @@ function onWindowResize () {
  */
 function addCar () {
   // Create some cubes around the origin point
-  var loader = new THREE.OBJLoader();
-  loader.load('models/compact.obj', function(o) {
-      o.position.y = - 95;
-    scene.add(o);
-  });
+  var texture = new THREE.Texture();
+
+  for (var i = 0; i < BOX_QUANTITY; i++) {
+    var angle = Math.PI * 2 * (i / BOX_QUANTITY);
+    var textureLoader = new THREE.ImageLoader();
+    textureLoader.load('textures/CompactBlue.png', function(t) {
+        texture.image = t;
+        texture.needsUpdate = true;
+    });
+
+    var loader = new THREE.OBJLoader();
+    loader.load('models/compact.obj', function(o) {
+        o.traverse(function(c){
+            if (c instanceof THREE.Mesh) {
+                c.material.map = texture;
+            }
+        });
+        o.position.set(Math.cos(angle) * BOX_DISTANCE, camera.position.y - 0.25, Math.sin(angle) * BOX_DISTANCE);
+        scene.add(o);
+    });
+  }
+
 
   // Flip this switch so that we only perform this once
   carAdded = true;
